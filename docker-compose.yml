@@ -1,16 +1,6 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  app:
-    build: .
-    depends_on:
-      - db
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=postgres
-    ports:
-      - 8000:8000
-
   db:
     image: postgres:14.5
     environment:
@@ -21,4 +11,24 @@ services:
       - 5432:5432
     volumes:
       - ./data/db:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 8000:8000
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
