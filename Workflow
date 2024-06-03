@@ -1,4 +1,4 @@
-name: Django Tests
+name: Django Tests and Deploy
 
 on: [push, pull_request]
 
@@ -49,4 +49,35 @@ jobs:
 
       - name: Run tests
         run: python manage.py test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.1
+        with:
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USER }}
+          key: ${{ secrets.AWS_EC2_KEY }}
+          script: |
+            cd /path/to/your/project
+            git pull origin main
+            sudo docker compose down
+            sudo docker compose up --build -d
+
 
