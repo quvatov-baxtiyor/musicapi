@@ -44,6 +44,9 @@ jobs:
       - name: Wait for PostgreSQL
         run: sleep 20
 
+      - name: Run Flake8
+        run: flake8 .
+
       - name: Run migrations
         run: python manage.py migrate
 
@@ -79,5 +82,4 @@ jobs:
             git pull origin main
             sudo docker compose down
             sudo docker compose up --build -d
-
 
