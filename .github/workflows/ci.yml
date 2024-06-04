@@ -25,7 +25,7 @@ jobs:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: test_db
-      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/test_db
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
 
     steps:
       - name: Checkout code
@@ -47,7 +47,7 @@ jobs:
           chmod +x wait-for-it.sh
 
       - name: Wait for PostgreSQL
-        run: ./wait-for-it.sh 127.0.0.1:5432 --timeout=60 --strict -- echo "PostgreSQL is up"
+        run: ./wait-for-it.sh localhost:5432 --timeout=60 --strict -- echo "PostgreSQL is up"
 
       - name: Run migrations
         run: python manage.py migrate
